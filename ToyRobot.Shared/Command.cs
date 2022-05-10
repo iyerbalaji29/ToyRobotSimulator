@@ -1,10 +1,14 @@
-﻿namespace ToyRobot.Shared;
+﻿using System.ComponentModel.DataAnnotations;
 
-public static class Command
+namespace ToyRobot.Shared;
+
+public class Command
 {
-    public const string Place = nameof(Place);
-    public const string Move = nameof(Move);
-    public const string Left = nameof(Left);
-    public const string Right = nameof(Right);
-    public const string Exit = nameof(Exit);
+    public int PositionX { get; set; } = 0;
+
+    public int PositionY { get; set; } = 0;
+
+    public RobotAction Action { get; set; }
+
+    public Direction Direction { get; set; }
 }

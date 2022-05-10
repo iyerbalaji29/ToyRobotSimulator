@@ -4,12 +4,12 @@ namespace ToyRobot.Shared;
 
 public enum Direction
 {
-    [Display(Name="Left")]
-    Left,
-    [Display(Name="Right")]
-    Right,
-    [Display(Name="North")]
+    [Display(Name="EAST")]
+    East,
+    [Display(Name="WEST")]
+    West,
+    [Display(Name="NORTH")]
     North,
-    [Display(Name="South")]
+    [Display(Name="SOUTH")]
     South
 }

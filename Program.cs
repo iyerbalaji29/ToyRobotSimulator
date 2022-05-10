@@ -3,6 +3,7 @@
 using Microsoft.Extensions.Logging;
 using Microsoft.Extensions.Logging.Abstractions;
 using ToyRobot.Shared;
+using ToyRobot.Shared.Utils;
 using ToyRobotEngine;
 
 
@@ -11,7 +12,7 @@ bool close = false;
 
 do
 {
-    Console.WriteLine("Hello, This is a Toy Robot Simulator!");
+    Console.WriteLine("Hello, This is a Toy Command Simulator!");
     Console.WriteLine($"This will take following commands as input:{Environment.NewLine}" +
                       $" - PLACE X, Y, DIRECTION{Environment.NewLine}" +
                       $" - MOVE{Environment.NewLine}" +
@@ -25,20 +26,27 @@ do
 
     if (string.IsNullOrWhiteSpace(input))
     {
-        Console.WriteLine("No command entered. Robot shutting down");
+        Console.WriteLine("No command entered. Command shutting down");
         return;
     }
 
-    if (string.Equals(input, Command.Exit, StringComparison.OrdinalIgnoreCase))
+    if (string.Equals(input, RobotAction.Exit.GetDisplayName(), StringComparison.OrdinalIgnoreCase))
     {
         close = true;
         Environment.Exit(0);
         return;
     }
-
-    var engine = new RobotService(new Logger<RobotService>(new NullLoggerFactory()));
-    var commandResult = engine.RunCommand(Direction.Left);
+    
+    var engine = new RobotService(new Logger<IRobotService>(new NullLoggerFactory()));
+    var commandResult = engine.Process(input);
     if (commandResult)
-        Console.WriteLine("Command executed!");
+    {
+        Console.WriteLine("RobotAction executed!");
+    }
+    else
+    {
+        Console.WriteLine("Invalid command entered. Please try again");
+        return;
+    }
 
 } while (close == false);
