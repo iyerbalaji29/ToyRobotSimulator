@@ -1,8 +1,8 @@
 ﻿using ToyRobot.Shared;
 
-namespace ToyRobotEngine;
+namespace ToyRobot.Services;
 
 public interface IRobotService
 {
-    bool Process(string input);
+    Robot Process(string input);
 }

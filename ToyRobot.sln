@@ -6,6 +6,8 @@ Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "ToyRobot.Services", "ToyRob
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "ToyRobot.Shared", "ToyRobot.Shared\ToyRobot.Shared.csproj", "{B9648C5E-4987-4C05-B8BA-B100AEE54D3F}"
 EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "ToyRobot.Services.Tests", "ToyRobot.Services.Tests\ToyRobot.Services.Tests.csproj", "{462A58E3-A853-45C6-994E-EA8554D1A9EA}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
@@ -24,5 +26,9 @@ Global
 		{B9648C5E-4987-4C05-B8BA-B100AEE54D3F}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{B9648C5E-4987-4C05-B8BA-B100AEE54D3F}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{B9648C5E-4987-4C05-B8BA-B100AEE54D3F}.Release|Any CPU.Build.0 = Release|Any CPU
+		{462A58E3-A853-45C6-994E-EA8554D1A9EA}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{462A58E3-A853-45C6-994E-EA8554D1A9EA}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{462A58E3-A853-45C6-994E-EA8554D1A9EA}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{462A58E3-A853-45C6-994E-EA8554D1A9EA}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 EndGlobal

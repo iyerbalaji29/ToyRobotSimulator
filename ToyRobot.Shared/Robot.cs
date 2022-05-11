@@ -2,18 +2,18 @@
 
 namespace ToyRobot.Shared;
 
-public class ToyRobot
+public class Robot: IRobot
 {
     public int PositionX { get; set; }
     public int PositionY { get; set; }
-    public Direction Direction { get; private set; }
-    
-    public string Report { get; set; }
-    
+    public Direction Direction { get; set; }
+    public bool IsPlaced { get; set; }
+
     public void Place(int x, int y, Direction? direction)
     {
         this.PositionX = x;
         this.PositionY = y;
+        this.IsPlaced = true;
         if(direction!= null)
             this.Direction = direction.Value;
     }
@@ -41,31 +41,38 @@ public class ToyRobot
 
     public void RotateLeft()
     {
-        Rotate(-1);
+        Rotate(2);
     }
 
     public void RotateRight()
     {
-        Rotate(1);
+        Rotate(-2);
     }
 
     public string GetReport()
     {
-        return $"Robot Position: {PositionX}, {PositionY}, {Direction.GetDisplayName()}";
+        return $"{PositionX},{PositionY},{Direction.GetDisplayName()}";
     }
+    
+    
 
     private void Rotate(int rotationNumber)
     {
         var directions = (Direction[]) Enum.GetValues(typeof(Direction));
+        var filteredDirections = directions.Except(new []{Direction.None});
+        var directionArray = filteredDirections.ToArray();
         Direction newDirection;
         if (Direction + rotationNumber < 0)
-            newDirection = directions[directions.Length - 1];
+        {
+            newDirection = directionArray[directionArray.Length - 1];
+        }
         else
         {
-            var index = (int) (Direction + rotationNumber) % directions.Length;
-            newDirection = directions[index];
+            var index = (int) (Direction + rotationNumber) % directionArray.Length;
+            newDirection = directionArray[index];
         }
 
         Direction = newDirection;
+        IsPlaced = true;
     } 
 }

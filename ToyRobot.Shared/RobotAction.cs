@@ -4,6 +4,8 @@ namespace ToyRobot.Shared;
 
 public enum RobotAction
 {
+    [Display(Name="NONE")]
+    None,
     [Display(Name="PLACE")]
     Place,
     [Display(Name="MOVE")]

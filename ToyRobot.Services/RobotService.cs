@@ -1,36 +1,32 @@
 ﻿using Microsoft.Extensions.Logging;
+using ToyRobot.Services.Helpers;
 using ToyRobot.Shared;
-using ToyRobot.Shared.Utils;
-using Robot = ToyRobot.Shared.ToyRobot;
 
-namespace ToyRobotEngine;
+namespace ToyRobot.Services;
 
 public class RobotService : IRobotService
 {
-    private readonly ILogger _logger;
-    private Command _command;
+    private readonly ILogger<RobotService> _logger;
     private readonly TableTop _table;
-    private readonly Robot _robot;
-    public RobotService(ILogger logger)
+    private Robot _toyRobot;
+    public RobotService(ILogger<RobotService> logger, IRobot toyRobot)
     {
         _logger = logger;
-        _command = new Command();
         _table = new TableTop(6, 6);
-        _robot = new Robot();
+        _toyRobot = new Robot();
     }
 
-    public bool Process(string input)
+    public Robot Process(string input)
     {
         if (InputCommandHelper.IsValid(input))
         {
             var command = InputCommandHelper.ParseCommand(input);
-            var result = Process(command);
-            
-            return true;
+            _toyRobot = Process(command);
+            return _toyRobot;
         }
 
-        Console.WriteLine("Invalid robotAction entered. Please try again");
-        return false;
+        Console.WriteLine("Invalid robot action entered. Please try again");
+        return _toyRobot;
     }
 
     private Robot Process(Command command)
@@ -39,36 +35,60 @@ public class RobotService : IRobotService
         {
             case RobotAction.Place:
                 var isValidPosition = _table.IsValid(command.PositionX, command.PositionY);
-                if (isValidPosition)
+                var direction = command.Direction == Direction.None 
+                    ? _toyRobot.Direction != Direction.None ? _toyRobot.Direction : Direction.None 
+                    : command.Direction;
+                if (isValidPosition && direction != Direction.None)
                 {
-                    _robot.Place(command.PositionX,command.PositionY,command.Direction);
+                    _toyRobot.Place(command.PositionX,command.PositionY,direction);
+                }
+                else
+                {
+                    _toyRobot.IsPlaced = false;
                 }
                 break;
             case RobotAction.Left:
-                _robot.RotateLeft();
+                if (_toyRobot.IsPlaced)
+                {
+                    _toyRobot.RotateLeft();
+                }
                 break;
             case RobotAction.Right:
-                _robot.RotateRight();
+                if (_toyRobot.IsPlaced)
+                {
+                    _toyRobot.RotateRight();
+                }
                 break;
             case RobotAction.Move:
-                var (x,y) = _robot.GetNextPosition();
-                if (_table.IsValid(x, y))
+                if (_toyRobot.IsPlaced)
                 {
-                    _robot.PositionX = x;
-                    _robot.PositionY = y;
+                    var (x, y) = _toyRobot.GetNextPosition();
+                    if (_table.IsValid(x, y))
+                    {
+                        _toyRobot.PositionX = x;
+                        _toyRobot.PositionY = y;
+                    }
+                    else
+                    {
+                        _toyRobot.IsPlaced = false;
+                        _logger.LogInformation($"Robot could not be moved to this position of the table {x}, {y}");
+                        Console.WriteLine($"Robot could not be moved to this position of the table {x}, {y}");
+                    }
                 }
-                _logger.LogInformation($"Robot could not be moved to this position as its end of the table {x}, {y}");
-                Console.WriteLine($"Robot could not be moved to this position as its end of the table");
                 break;
             case RobotAction.Report:
-                _robot.Report = _robot.GetReport();
+                if (_toyRobot.IsPlaced)
+                {
+                    Console.WriteLine(_toyRobot.GetReport());
+                }
                 break;
             
+            case RobotAction.None:
             default:
-                _logger.LogInformation($"Action could not be parsed based on input {command.Action.GetDisplayName()}");
-                Console.WriteLine($"Command could not be moved");
-                return _robot;
+                _logger.LogInformation($"Action could not be taken");
+                Console.WriteLine($"Action could not be taken");
+                return _toyRobot;
         }
-        return _robot;
+        return _toyRobot;
     }
 }
